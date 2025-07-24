@@ -1,0 +1,12 @@
+Validation Accuracy: 96.18%
+
+		    precision    recall  f1-score   support
+
+      damage       0.97      0.90      0.94       152
+        fire       0.97      0.99      0.98       155
+       flood       0.92      0.97      0.94       160
+      normal       0.99      0.98      0.99       161
+
+    accuracy                           0.96       628
+   macro avg       0.96      0.96      0.96       628
+weighted avg       0.96      0.96      0.96       628
