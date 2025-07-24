@@ -1,0 +1,13 @@
+train: ../train/images
+val: ../valid/images
+test: ../test/images
+
+nc: 3
+names: ['circle', 'square', 'triangle']
+
+roboflow:
+  workspace: myworkspace-afyfg
+  project: object-cqf7k
+  version: 1
+  license: CC BY 4.0
+  url: https://universe.roboflow.com/myworkspace-afyfg/object-cqf7k/dataset/1
