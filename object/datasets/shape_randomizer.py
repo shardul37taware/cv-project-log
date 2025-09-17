@@ -1,77 +1,106 @@
 import cv2
 import numpy as np
-import matplotlib.pyplot as plt    
+import os
 
-# create a blank image
-img = np.zeros((960, 960, 3), dtype=np.uint8)
+# Output paths
+image_dir = r"D:\git\cv-project-log\object\datasets\shapes\images"
+label_dir = r"D:\git\cv-project-log\object\datasets\shapes\labels"
+os.makedirs(image_dir, exist_ok=True)
+os.makedirs(label_dir, exist_ok=True)
+
+# Allowed overlap (0 = no overlap allowed, 1 = full overlap allowed)
+min_allowed_overlap = 0.2
+
+# style probabilities: solid = 2/3, painted = 1/6, printed = 1/6
+style_probs = [2/3, 1/6, 1/6]
+
+def overlap_ratio(box1, box2):
+    x1_min, y1_min, x1_max, y1_max = box1
+    x2_min, y2_min, x2_max, y2_max = box2
+    inter_xmin = max(x1_min, x2_min)
+    inter_ymin = max(y1_min, y2_min)
+    inter_xmax = min(x1_max, x2_max)
+    inter_ymax = min(y1_max, y2_max)
+    inter_w = max(0, inter_xmax - inter_xmin)
+    inter_h = max(0, inter_ymax - inter_ymin)
+    inter_area = inter_w * inter_h
+    area1 = (x1_max - x1_min) * (y1_max - y1_min)
+    area2 = (x2_max - x2_min) * (y2_max - y2_min)
+    smaller_area = min(area1, area2) if area1 > 0 and area2 > 0 else 1
+    return inter_area / smaller_area
+
+
+def check_overlap(candidate, boxes, max_ratio):
+    for b in boxes:
+        if overlap_ratio(candidate, b) > max_ratio:
+            return True
+    return False
+
+img_size = 960
 
 for k in range(0, 300):
-  # give a random colour to the image
-  # img[:] = np.random.randint(0, 255, 3)
-  img[:] = (255, 255, 255)
 
-  # define minimum and maximum size of the shape
-  minRatio, maxRatio = 0.05, 0.2
-  lb = int(min(img.shape[:2]) * minRatio)
-  ub = int(min(img.shape[:2]) * maxRatio)
+    img = np.zeros((img_size, img_size, 3), dtype=np.uint8)
+    img[:] = np.random.randint(0, 255, 3)
 
-  shapes = np.array([3, 4, 20])     # triangle, square, circle
+    minRatio, maxRatio = 0.05, 0.2
+    lb = int(img_size * minRatio)
+    ub = int(img_size * maxRatio)
 
-  # lists to save the coordinates already occupied by shapes
-  xymin = []
-  xymax = []
+    shapes = np.array([3, 4, 20])
+    placed_boxes = []
+    annotations = []   # <--- collect annotations here
 
-  # select random number of shapes (between 2 to 7)
-  for i in range(np.random.randint(2, 7)):
-    
-    radius = np.random.randint(lb, ub)
+    for i in range(np.random.randint(2, 7)):
+        radius = np.random.randint(lb, ub)
+        idx = np.random.randint(0, len(shapes))
+        n = shapes[idx]
 
-    # number of sides
-    idx = np.random.randint(0, len(shapes))
-    n = shapes[idx]
-    # angle
-    angle = np.deg2rad(np.random.randint(0, 360))
-    # colour
-    colour = tuple(np.random.randint(0, 255, 3).tolist())
+        for attempt in range(50):
+            center = np.random.randint(radius, img_size - radius, 2).astype(float)
+            angle = np.deg2rad(np.random.randint(0, 360))
+            colour = tuple(np.random.randint(0, 255, 3).tolist())
 
-    center = np.random.randint(radius, min(img.shape[:2]) - radius, 2).astype(float)
+            points = []
+            for j in range(n):
+                theta = angle + j * (2 * np.pi / n)
+                x = center[0] + radius * np.cos(theta)
+                y = center[1] + radius * np.sin(theta)
+                points.append([x, y])
 
-    # generate n points radius distance away from the centre at equal angles
-    points = []
-    for j in range(n):
-        theta = angle + j * (2*np.pi/n)  # 360/n degrees apart
-        x = center[0] + radius * np.cos(theta)
-        y = center[1] + radius * np.sin(theta)
-        points.append([x, y])
+            points = np.array(points, dtype=np.int32)
+            xmin, ymin = points.min(axis=0)
+            xmax, ymax = points.max(axis=0)
+            candidate_box = (xmin, ymin, xmax, ymax)
 
-    points = np.array(points, dtype=np.int32)
+            if not check_overlap(candidate_box, placed_boxes, min_allowed_overlap):
+                # Decide which style this shape will be
+                style = np.random.choice(["solid", "painted", "printed"], p=style_probs)
 
-    xmin, ymin = points.min(axis = 0)
-    xmax, ymax = points.max(axis = 0)
+                if style == "solid":
+                    cv2.drawContours(img, [points], 0, colour, -1)
 
-    # cv2.rectangle(img, (xmin-15, ymin-15), (xmax+15, ymax+15), (255, 255, 255), -1)
+                elif style == "painted":
+                    cv2.drawContours(img, [points], 0, colour, 5)
 
-    # draw filled shape
-    cv2.drawContours(img, [points], 0, colour, -1)
+                elif style == "printed":
+                    # white base rectangle
+                    cv2.rectangle(img, (xmin-10, ymin-10), (xmax+10, ymax+10), (255, 255, 255), -1)
+                    # outline on top
+                    cv2.drawContours(img, [points], 0, colour, 4)
 
-    # saving image
-    cv2.imwrite(f"D:\git\cv-project-log\object\datasets\shapes\images\w_{k}.jpg", img)
+                placed_boxes.append(candidate_box)
 
-    # get coordinates for the bounding box 
-    # xmin, ymin = points.min(axis = 0)
-    # xmax, ymax = points.max(axis = 0)
+                w = (xmax - xmin) / img_size
+                h = (ymax - ymin) / img_size
+                xcenter = center[0] / img_size
+                ycenter = center[1] / img_size
 
+                annotations.append(f"{idx} {xcenter:.6f} {ycenter:.6f} {w:.6f} {h:.6f}")
+                break
 
-
-    w = (xmax - xmin) / img.shape[0]      # yolo uses normalised coordinates for its anotations
-    h = (ymax - ymin) / img.shape[1]
-    xcenter = center[0] / img.shape[0]
-    ycenter = center[1] / img.shape[1]
-
-    # creating/appending annotation file with same name as the image
-    with open(f"D:\git\cv-project-log\object\datasets\shapes\labels\w_{k}.txt", "a") as f:
-      f.write(f"{idx} {xcenter} {ycenter} {w}  {h}\n")
-    
-#   plt.imshow(img)
-#   plt.axis("off")
-#   plt.show()
+    # Only save if shapes were placed
+    if annotations:
+        cv2.imwrite(os.path.join(image_dir, f"w_{k}.jpg"), img)
+        with open(os.path.join(label_dir, f"w_{k}.txt"), "w") as f:
+            f.write("\n".join(annotations))
