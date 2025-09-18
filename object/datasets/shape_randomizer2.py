@@ -6,7 +6,7 @@ import glob
 # Input folder containing base images
 input_dir = r"C:\Users\Admin\OneDrive\Desktop\DATASET\OUTPUT_background\train\REAL_DIRT_TRAIN"
 # Output folders
-image_dir = r"C:\\Users\\Admin\\OneDrive\\Desktop\\DATASET\\FINAL_TRANING_DATASET\\train\\images\\REAL_DIRT_TRAIN"
+image_dir = r"C:\Users\Admin\OneDrive\Desktop\DATASET\FINAL_TRANING_DATASET\train\images\REAL_DIRT_TRAIN"
 label_dir = r"C:\Users\Admin\OneDrive\Desktop\DATASET\FINAL_TRANING_DATASET\train\labels\REAL_DIRT_TRAIN"
 os.makedirs(image_dir, exist_ok=True)
 os.makedirs(label_dir, exist_ok=True)
@@ -54,11 +54,11 @@ for path in image_paths:
     lb = int(min(h_img, w_img) * minRatio)
     ub = int(min(h_img, w_img) * maxRatio)
 
-    shapes = np.array([3, 4, 20])
+    shapes = np.array([3, 4, 5, 6, 20])
     placed_boxes = []
     annotations = []
 
-    for i in range(np.random.randint(2, 10)):
+    for i in range(np.random.randint(2, 7)):
         radius = np.random.randint(lb, ub)
         idx = np.random.randint(0, len(shapes))
         n = shapes[idx]
@@ -102,8 +102,9 @@ for path in image_paths:
                 h = (ymax - ymin) / h_img
                 xcenter = center[0] / w_img
                 ycenter = center[1] / h_img
-
-                annotations.append(f"{idx} {xcenter:.6f} {ycenter:.6f} {w:.6f} {h:.6f}")
+                
+                if n not in [5, 6]:
+                    annotations.append(f"{idx} {xcenter:.6f} {ycenter:.6f} {w:.6f} {h:.6f}")
                 break
 
     # save modified image and annotation file with same base name
