@@ -16,6 +16,8 @@ cv2.resizeWindow("Parameters", 640, 240)
 cv2.createTrackbar("Threshold 1", "Parameters", 150, 255, empty)
 cv2.createTrackbar("Threshold 2", "Parameters", 150, 255, empty)
 
+def getContours(img, )
+
 
 while True:
     ret, frame = cap.read()
@@ -28,7 +30,10 @@ while True:
 
     imgCanny = cv2.Canny(imgGray, threshold1, threshold2)
 
+    kernel = np.ones((5,5))
+    imgDil = cv2.dilate(imgCanny, kernel, iterations = 1)
 
-    cv2.imshow("Shape Detector", imgCanny)
+
+    cv2.imshow("Shape Detector", imgDil)
     if cv2.waitKey(1) & 0xff == ord(' '):
         break
