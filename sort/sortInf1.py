@@ -107,4 +107,4 @@ for idx, row in log_df.iterrows():
     log_df.at[idx, 'time_tracked'] = track_counts.get(tid, 0) / fps if fps > 0 else 0
 
 # Save logs
-log_df.to_csv("0_10_3_02_640.csv", index=False)
+log_df.to_csv("test.csv", index=False)
