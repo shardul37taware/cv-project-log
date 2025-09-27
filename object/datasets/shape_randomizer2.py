@@ -50,7 +50,7 @@ for path in image_paths:
         continue
     h_img, w_img = img.shape[:2]
 
-    minRatio, maxRatio = 0.05, 0.2
+    minRatio, maxRatio = 0.03, 0.17
     lb = int(min(h_img, w_img) * minRatio)
     ub = int(min(h_img, w_img) * maxRatio)
 
