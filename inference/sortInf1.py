@@ -17,7 +17,7 @@ tracker = Sort(max_age=10, min_hits=3, iou_threshold=0.2)
 log_df = pd.DataFrame(columns=["id", "x1", "y1", "x2", "y2", "class", "confidence", "time_tracked"])
 
 # --- Video Input ---
-cap = cv2.VideoCapture(r"D:\sst\20250920_133619_1_1.mp4")
+cap = cv2.VideoCapture(r"D:\sst\WhatsApp Video 2025-09-25 at 19.00.54_f8afc9fb.mp4")
 fps = cap.get(cv2.CAP_PROP_FPS)  # 🔹 Frames per second
 
 ret, frame = cap.read()
@@ -101,10 +101,11 @@ while True:
 cap.release()
 cv2.destroyAllWindows()
 
-# --- Update time_tracked in final logs ---
+# --- Update time_tracked in final logs (rounded to 2 decimals) ---
 for idx, row in log_df.iterrows():
     tid = int(row['id'])
-    log_df.at[idx, 'time_tracked'] = track_counts.get(tid, 0) / fps if fps > 0 else 0
+    time_tracked = track_counts.get(tid, 0) / fps if fps > 0 else 0
+    log_df.at[idx, 'time_tracked'] = round(time_tracked, 2)
 
 # Save logs
-log_df.to_csv("test.csv", index=False)
+log_df.to_csv("test3.csv", index=False)
