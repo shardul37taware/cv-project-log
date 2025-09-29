@@ -10,7 +10,7 @@ orig_h, orig_w = frame.shape[:2]
 aspect_ratio = orig_h / orig_w
 resize_height = int(resize_width * aspect_ratio)
 
-clahe = cv2.createCLAHE(15.0, (8, 8))
+clahe = cv2.createCLAHE(1.0, (20, 20))
 
 while True:
     ret, frame = cap.read()
@@ -21,10 +21,10 @@ while True:
     hsv[:, :, 2] = clahe.apply(hsv[:, :, 2])
     frameEq = cv2.cvtColor(hsv, cv2.COLOR_HSV2BGR)
 
-    frameBlur = cv2.GaussianBlur
+    frameBlur = cv2.blur(frameEq, (3, 3))
 
     # Show frame
-    cv2.imshow("Video", frameEq)
+    cv2.imshow("Video", frameBlur)
 
     # Exit on ' '
     if cv2.waitKey(1) & 0xFF == ord(' '):
