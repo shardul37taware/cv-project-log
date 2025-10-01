@@ -5,7 +5,10 @@ import glob
 # --- SETTINGS ---
 image_folder = r"D:\git\cv-project-log\object\datasets\images"         # folder with your images
 output_folder = r"D:\git\cv-project-log\object\datasets\labels"        # folder for YOLO annotations
-batch_size = 36                 # number of consecutive images to apply same boxes
+batch_size = 36                                                        # number of consecutive images to apply same boxes
+
+current_class_id = 0  # default class id
+
 
 # Create output folder if not exists
 os.makedirs(output_folder, exist_ok=True)
@@ -27,7 +30,6 @@ print(f"✅ Found {len(image_files)} images.")
 drawing = False
 x1, y1, x2, y2 = -1, -1, -1, -1
 boxes = []  # list of (x1, y1, x2, y2, class_id)
-current_class_id = 0  # default class id
 mouse_x, mouse_y = -1, -1  # track mouse position
 
 
