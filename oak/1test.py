@@ -1,18 +1,19 @@
-import depthai as dai
 import cv2
+import depthai as dai
 
+# Create pipeline
 pipeline = dai.Pipeline()
 
-mono = pipeline.createMonoCamera()
-mono.setBoardSocket(dai.CameraBoardSocket.LEFT)
+cam = pipeline.create(dai.node.Camera).build()
+videoQueue = cam.requestFullResolutionOutput().createOutputQueue()
 
-xout = pipeline.createXLinkOut()
-xout.setStreamName("left")
-mono.out.link(xout.input)
 
-with dai.Device(pipeline) as device:
-    queue = device.getOutputQueue(name="left")
-    frame = queue.get()
+pipeline.start()
+while pipeline.isRunning():
+    videoIn = videoQueue.get()
+    assert isinstance(videoIn, dai.ImgFrame)
+    cv2.imshow("full resoluton", videoIn.getCvFrame())
 
-imOut = frame.getCvFrame()
-cv2.imshow("mono", imOut)
+    if cv2.waitKey(1) ==ord(' '):
+        break
+        
