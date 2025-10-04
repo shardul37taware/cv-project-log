@@ -2,7 +2,7 @@ import cv2
 import depthai as dai
 from depthai_nodes.node import ParsingNeuralNetwork
 
-model = dai.NNArchive(r"D:\git\cv-project-log\oak\ultra_final_final.rvc2_legacy.rvc2.tar.xz")
+model = dai.NNArchive(r"D:\git\cv-project-log\oak\best68.rvc2.tar.xz")
 
 pipeline = dai.Pipeline()
 camera = pipeline.create(dai.node.Camera).build()
