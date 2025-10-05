@@ -5,7 +5,7 @@ import depthai as dai
 pipeline = dai.Pipeline()
 
 cam = pipeline.create(dai.node.Camera).build()
-videoQueue = cam.requestOutput((600, 400)).createOutputQueue()
+videoQueue = cam.requestFullResolutionOutput().createOutputQueue()
  
 
 pipeline.start()
