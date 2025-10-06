@@ -4,7 +4,7 @@ from depthai_nodes.node import ParsingNeuralNetwork
 import time
 import numpy as np
 
-modelPath = r"griffin/target-640:model-variant-1"
+modelPath = r"griffin/disaster:model-variant-1"
 confThresh = 0.8
 
 pipeline = dai.Pipeline()
