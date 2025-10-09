@@ -6,7 +6,7 @@ import numpy as np
 from collections import Counter
 
 # Load model
-model = timm.create_model("mobilevit_s", pretrained=False, num_classes=4)  
+model = timm.create_model("mobilevit_s", pretrained=False, num_classes=4)  # change `3` to your number of classes
 model.load_state_dict(torch.load("D:/git/learning-cv/disaster classification/MobileViT/mobilevit_s_disaster_II.pth", map_location=torch.device('cpu')))
 model.eval()
 
@@ -18,7 +18,7 @@ transform = transforms.Compose([
 
 
 # Set up video feed (0 = webcam; change to URL or device for drone)
-cap = cv2.VideoCapture("D:\sst\WhatsApp Video 2025-09-20 at 16.58.32_7aa2013f.mp4")
+cap = cv2.VideoCapture(0)
 
 class_names = ["Damage", "Fire", "Flood", "Normal"]  # change to your actual class labels
 
