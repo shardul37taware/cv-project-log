@@ -8,7 +8,7 @@ model = YOLO(r'D:\git\cv-project-log\target\models\ultra_final_final.pt')
 confidence_threshold = 0.8
 
 # Initialize webcam
-cap = cv2.VideoCapture(1)
+cap = cv2.VideoCapture(0)
 
 if not cap.isOpened():
     print("Error: Could not access webcam.")

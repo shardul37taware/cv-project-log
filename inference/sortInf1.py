@@ -109,3 +109,4 @@ for idx, row in log_df.iterrows():
 
 # Save logs
 log_df.to_csv("test3.csv", index=False)
+ 
