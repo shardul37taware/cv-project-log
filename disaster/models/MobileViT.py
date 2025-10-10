@@ -32,7 +32,7 @@ while True:
     # Preprocess
     input_tensor = transform(frame).unsqueeze(0)  # [1, 3, 256, 256]
 
-    # Inference
+    # Inference 
     with torch.no_grad():
         outputs = model(input_tensor)
         probs = torch.softmax(outputs, dim=1)
