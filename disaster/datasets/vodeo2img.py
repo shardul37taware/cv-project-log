@@ -1,13 +1,13 @@
 import cv2
 
-cap = cv2.VideoCapture(r"D:\sst\drove_vid.mp4")
+cap = cv2.VideoCapture(r"D:\sst\drone survey(1).mp4")
 
-i = 1
+i = 0
 while True:
     ret, frame = cap.read()
 
-    if i % 10:
-        cv2.imwrite(fr"D:\sst\disaster\dataset raw - Copy\normal\normal ({int(i/10)}).jpg", frame)
+    
+    cv2.imwrite(fr"D:\sst\surveyImages\{i}.jpg", frame)
 
     i += 1
 

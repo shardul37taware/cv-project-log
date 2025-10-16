@@ -33,9 +33,28 @@ disaster_flag = 1
 #camera feed
 cap = cv2.VideoCapture(0)
 
-def YOLOinf(model, )
-
 #inference
 while True:
     ret, frame = cap.read()
 
+    #shapes model
+    if shapes_flag:
+        results = shapes_model.predict(source=frame, show=False, conf=0.8, verbose=False)
+        result = results[0]
+
+        for box in result.boxes:
+            x1, y1, x2, y2 = [int(v) for v in box.xyxy[0]]
+            conf = float(box.conf[0])
+            cls = int(box.cls[0])
+
+            cv2.rectangle(frame, (x1, y1), (x2, y2), (255, 0, 0), 3)
+            cv2.putText(frame, f"{shapes_names[cls]}", (x1, y1), cv2.FONT_HERSHEY_SIMPLEX, 0.7, (255, 0, 0), 2)
+
+    #display frame
+    cv2.imshow("frame", frame)
+
+    if cv2.waitKey(1) & 0xFF == ord(' '):
+        break
+
+cap.release()
+cv2.destroyAllWindows()

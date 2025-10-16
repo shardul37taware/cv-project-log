@@ -10,14 +10,14 @@ xbuffer = 10
 ybuffer = 8
 
 # --- Model & Tracker ---
-model = YOLO(r"D:\git\cv-project-log\target\models\ultra_final_final.pt")
+model = YOLO(r"D:\git\cv-project-log\object\models\best67.pt")
 tracker = Sort(max_age=10, min_hits=3, iou_threshold=0.2)
 
 # --- Log DataFrame ---
 log_df = pd.DataFrame(columns=["id", "x1", "y1", "x2", "y2", "class", "confidence", "time_tracked"])
 
 # --- Video Input ---
-cap = cv2.VideoCapture(r"D:\sst\WhatsApp Video 2025-09-25 at 19.00.54_f8afc9fb.mp4")
+cap = cv2.VideoCapture(r"D:\sst\drone survey(1).mp4")
 fps = cap.get(cv2.CAP_PROP_FPS)  # 🔹 Frames per second
 
 ret, frame = cap.read()
