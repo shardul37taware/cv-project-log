@@ -18,7 +18,7 @@ transform = transforms.Compose([
 
 
 # Set up video feed (0 = webcam; change to URL or device for drone)
-cap = cv2.VideoCapture("D:\sst\WhatsApp Video 2025-09-20 at 16.58.32_7aa2013f.mp4")
+cap = cv2.VideoCapture(0)
 
 class_names = ["Damage", "Fire", "Flood", "Normal"]  # change to your actual class labels
 
