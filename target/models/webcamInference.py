@@ -2,7 +2,7 @@ import cv2
 from ultralytics import YOLO
 
 # Load the YOLOv8 model (make sure 'ultra_final_final.pt' exists)
-model = YOLO(r'D:\git\cv-project-log\target\models\ultra_final_final.pt')
+model = YOLO(r'D:\git\cv-project-log\target\models\best68.pt')
 
 # Set confidence threshold
 confidence_threshold = 0.8
